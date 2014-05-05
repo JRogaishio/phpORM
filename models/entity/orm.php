@@ -4,30 +4,57 @@
  	private $table = null;
  	private $conn = null;
  	
- 	public function __construct() {
- 		$this->table = get_class($this);
- 		//echo "##" . get_class($this) . "##<br /><br />";
- 		//$this->conn = $conn;
+ 	function orm() {
+ 		echo "Called from ORM constructor";
  	}
  	
- 	//property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" 
- 	//unsavedvalue="" default="";
+ 	public function __construct() {
+ 		$this->table = get_class($this);
+ 	}
+ 	
+ 	public function save() {
+ 		$hasPrimary = false;
+ 		$sql = "";
+ 		$field = "";
+ 		$value = "";
+ 		foreach(get_object_vars($this) as $var) {
+ 			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
+ 				if(isset($var['primary']) && $var['primary'] == true) {
+ 					$hasPrimary = true;
+ 				}
+ 			}
+ 		}
+ 		
+ 		//If there is a primary key, you are updating
+ 		if($hasPrimary == true) {
+ 			$sql = "UPDATE " . $this->table . " ";
+ 		} else {
+ 			//Insert since we dont have a key
+ 			$sql = "INSERT INTO " . $this->table . " (";
+ 		}
+ 		
+ 		foreach(get_object_vars($this) as $var) {
+ 			if(is_array($var) && isset($var['orm']) && $var['orm'] == true && isset($var['value'])) {
+ 				
+		 		//If there is a primary key, you are updating
+		 		if($hasPrimary == true) {
+		 			$sql .= " SET " . $var['field'] . "=" . $var['value'];
+		 		} else {
+		 		//Insert since we dont have a key	
+		 			
+		 		}
+ 			}
+ 		}
+ 	}
  	
  	public function persist() {
- 		$create = false;
+ 		$create = true;
  		$sql = "";
  		$field = "";
  		$pk = "";
 
- 		//public $id = array("orm"=>true, "datatype"=>"int", "length"=>16, "field"=>"id", "primary"=>true);
- 		//if(mysql_num_rows(mysql_query("SHOW TABLES LIKE '".$table."'"))==1) {
- 			//Table exists. Alter it to match
- 			$sql = "ALTER TABLE " . $this->table;
- 		//} else {
- 			//Table doesn't exist. Create it
- 			//$sql = "CREATE TABLE IF NOT EXISTS `" . $this->table . "` (";
- 			//$create = true;
- 		//}
+ 		//Table doesn't exist. Create it
+ 		$sql = "CREATE TABLE IF NOT EXISTS `" . $this->table . "` (";
 
  		foreach(get_object_vars($this) as $var) {
   			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
