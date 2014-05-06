@@ -10,14 +10,42 @@
  	}
  	
  	public function load($id) {
- 		/*foreach(get_object_vars($this) as $var) {
+ 		$sql = "SELECT * FROM " . $this->table . " WHERE ";
+ 		$primary = "";
+ 		
+ 		foreach(get_object_vars($this) as $var) {
  			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
- 				if(isset($var['primary']) && $var['primary'] == true && isset($var['value']) && $var['value'] != "") {
+ 				if(isset($var['primary']) && $var['primary'] == true) {
  					$primary = $var['field'];
- 					$primaryIndex = $var['value'];
+ 					break;
  				}
  			}
- 		}*/
+ 		}
+ 		
+ 		$sql .= $primary . "=" . $id;
+
+ 		$result = $this->conn->query($sql) OR DIE ("Could not load");
+ 		
+ 		if ($result !== false && mysqli_num_rows($result) > 0 )
+ 			$row = mysqli_fetch_assoc($result);
+ 		
+ 		if(isset($row)) {
+ 			foreach(get_object_vars($this) as $var) {
+ 				if(is_array($var) && isset($var['orm']) && $var['orm'] == true && is_array($this->$var['field'])) {
+ 					$newVal = array("value"=>$row[$var['field']]);
+ 					$this->$var['field'] = array_merge($this->$var['field'], $newVal);
+ 					echo $var['field'] . ": V";
+ 					print_r($newVal);
+ 					echo "<pre>##";
+ 					print_r($this->$var['field']);
+ 					echo "##</pre>";
+
+ 					
+ 				}
+ 			}
+ 			
+ 		}
+ 		return $result;
  	}
  	
 	public function set(&$var, $value) {
@@ -63,8 +91,10 @@
 			 		if($primary != null) {
 			 			if($value != "")
 			 				$value .= ", ";
+			 			else if($value == "")
+			 				$value .= " SET ";
 			 			
-			 			$value .= " SET " . $var['field'] . "=" . $this->sqlWrap($var['value'], $var['datatype']);
+			 			$value .=  $var['field'] . "=" . $this->sqlWrap($var['value'], $var['datatype']);
 			 		} else {
 			 		//Insert since we dont have a key	
 			 			
@@ -83,8 +113,10 @@
  			$sql .= $value . " WHERE " . $primary . "=" . $primaryIndex;
  		else 
  			$sql .= "(" . $field . ") VALUES (" . $value . ")";
+
+ 		$result = $this->conn->query($sql) OR DIE ("Could not save");
  		
- 		return $sql;
+ 		return $result;
  	}
  	
  	private function sqlWrap($val, $type) {
@@ -132,7 +164,9 @@
  		if($create)
  			$sql .= ");";
  		
- 		return $sql;
+ 		$result = $this->conn->query($sql) OR DIE ("Could not save");
+ 		
+ 		return $result;
  	}
  	
  }

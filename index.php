@@ -16,26 +16,58 @@ $conn->select_db(DB_NAME) or die("Could not select database. " . mysqli_error())
 
 
 echo "<h1>Object Table Creating</h1>";
-$user = new user();
+$user = new user($conn);
 $retVal = $user->persist();
-echo $retVal;
-
-echo "<h1>Object Updating</h1>";
-$user = new user();
-$user->setId(1);
-$user->setName("username here");
-$user->setSalt("salt");
-$user->setPassword("password");
-$retVal = $user->save();
-echo $retVal;
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
 
 echo "<h1>Object Saving</h1>";
-$user = new user();
-$user->setName("username here");
-$user->setSalt("salt");
-$user->setPassword("password");
+$user = new user($conn);
+$user->setUsername("MyUserName");
+$user->setSalt("MySalt");
+$user->setPassword("MyPassword");
+//$retVal = $user->save();
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+echo "<h1>Object Updating</h1>";
+$user = new user($conn);
+$user->setId(1);
+$user->setUsername("MyUserName");
+$user->setSalt("MySalt");
+$user->setPassword("MyPassword");
 $retVal = $user->save();
-echo $retVal;
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+
+
+echo "<h1>Object Updating</h1>";
+$user = new user($conn);
+$retVal = $user->load(1);
+
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+echo "<br />";
+echo "Id: " . $user->getId() . "<br />";
+echo "Name: " . $user->getUsername() . "<br />";
+echo "Salt: " . $user->getSalt() . "<br />";
+echo "Password: " . $user->getPassword() . "<br />";
+
+
+
+
+
+
 
 
 ?>
