@@ -7,10 +7,15 @@ class user extends orm {
 	public $salt = array("orm"=>true, "datatype"=>"varchar", "length"=>64, "field"=>"salt");
 	public $password = array("orm"=>true, "datatype"=>"varchar", "length"=>128, "field"=>"password");
 	
-	public function setId($val) {$this->id['value'] = $val;}
-	public function setName($val) {$this->name['value'] = $val;}
-	public function setSalt($val) {$this->salt['value'] = $val;}
-	public function setPassword($val) {$this->password['value'] = $val;}
+	public function setId($val) {$this->set($this->id, $val);}
+	public function setName($val) {$this->set($this->name, $val);}
+	public function setSalt($val) {$this->set($this->salt, $val);}
+	public function setPassword($val) {$this->set($this->password, $val);}
+	
+	public function getId($val) {$this->get($this->id);}
+	public function getName($val) {$this->get($this->name);}
+	public function getSalt($val) {$this->get($this->salt);}
+	public function getPassword($val) {$this->get($this->password);}
 	
 }
 

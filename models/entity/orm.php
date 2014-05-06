@@ -4,8 +4,9 @@
  	private $table = null;
  	private $conn = null;
  	
- 	public function __construct() {
+ 	public function __construct($conn) {
  		$this->table = get_class($this);
+ 		$this->conn = $conn;
  	}
  	
  	public function load($id) {
@@ -17,6 +18,17 @@
  				}
  			}
  		}*/
+ 	}
+ 	
+	public function set(&$var, $value) {
+		$var['value'] = $value;
+ 	}
+ 	
+ 	public function get($var) {
+ 		if(isset($var['value']))
+ 			return $var['value'];
+ 		else 
+ 			return null;
  	}
  	
  	public function save() {
