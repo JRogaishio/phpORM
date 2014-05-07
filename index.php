@@ -48,7 +48,7 @@ else
 
 
 
-echo "<h1>Object Updating</h1>";
+echo "<h1>Object Loading</h1>";
 $user = new user($conn);
 $retVal = $user->load(1);
 

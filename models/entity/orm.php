@@ -33,14 +33,7 @@
  			foreach(get_object_vars($this) as $var) {
  				if(is_array($var) && isset($var['orm']) && $var['orm'] == true && is_array($this->$var['field'])) {
  					$newVal = array("value"=>$row[$var['field']]);
- 					$this->$var['field'] = array_merge($this->$var['field'], $newVal);
- 					echo $var['field'] . ": V";
- 					print_r($newVal);
- 					echo "<pre>##";
- 					print_r($this->$var['field']);
- 					echo "##</pre>";
-
- 					
+ 					$this->$var['field'] = array_merge($this->$var['field'], $newVal);					
  				}
  			}
  			
