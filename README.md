@@ -32,6 +32,8 @@ Loads an object from the database into all the ORM fields of your class.
 ORM Variables
 --------------
 `protected $id = array("orm"=>true, "datatype"=>"int", "length"=>16, "field"=>"id", "primary"=>true);`
+
+
 The above is an example of an ORM variable. Below are the keys explained:
 - orm: This is used to identify this field as an ORM field and to be persisted in the database
 - datatype: This is the MySQL datatype you want this field to be persisted as
