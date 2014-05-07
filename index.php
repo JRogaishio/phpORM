@@ -13,8 +13,6 @@ $conn->query($dbCreate) OR DIE ("Could not build database!");
 $conn->select_db(DB_NAME) or die("Could not select database. " . mysqli_error());
 
 
-
-
 echo "<h1>Object Table Creating</h1>";
 $user = new user($conn);
 $retVal = $user->persist();
@@ -28,7 +26,7 @@ $user = new user($conn);
 $user->setUsername("MyUserName");
 $user->setSalt("MySalt");
 $user->setPassword("MyPassword");
-//$retVal = $user->save();
+$retVal = $user->save();
 if($retVal)
 	echo "Success!";
 else
@@ -62,12 +60,6 @@ echo "Id: " . $user->getId() . "<br />";
 echo "Name: " . $user->getUsername() . "<br />";
 echo "Salt: " . $user->getSalt() . "<br />";
 echo "Password: " . $user->getPassword() . "<br />";
-
-
-
-
-
-
 
 
 ?>
