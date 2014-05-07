@@ -4,11 +4,23 @@
  	private $table = null;
  	private $conn = null;
  	
+ 	/*
+ 	 * Saves the class name and the database connection object
+ 	*
+ 	* @param $conn	The database connection object
+ 	*/
  	public function __construct($conn) {
  		$this->table = get_class($this);
  		$this->conn = $conn;
  	}
  	
+ 	/*
+ 	 * Loads the object from the database based on an id
+ 	 * 
+ 	 * @param $id	The database ID to load
+ 	 * 
+ 	 * @return Returns true on database search success, else false
+ 	 */
  	public function load($id) {
  		$sql = "SELECT * FROM " . $this->table . " WHERE ";
  		$primary = "";
@@ -41,10 +53,24 @@
  		return $result;
  	}
  	
+ 	/*
+ 	 * Sets a ORM object value
+ 	 * 
+ 	 *  @param &$var	The object to set the value, passed by reference
+ 	 *  @param $value	The value to set
+ 	 *  
+ 	*/
 	public function set(&$var, $value) {
 		$var['value'] = $value;
  	}
  	
+ 	/*
+ 	 * Gets a ORM object value
+ 	 * 
+ 	 * @param $var	The object to get a value from
+ 	 * 
+ 	 * @return Returns the value or null if none is set
+ 	*/
  	public function get($var) {
  		if(isset($var['value']))
  			return $var['value'];
@@ -52,6 +78,13 @@
  			return null;
  	}
  	
+ 	/*
+ 	 * Saves the object to the database.
+ 	 * 
+ 	 * This will insert the object if no primary key is defined or update the database records if a key exists
+ 	 * 
+ 	 * @return Returns true if database success else false
+ 	*/
  	public function save() {
  		$primary = null;
  		$primaryIndex = null;
@@ -112,6 +145,14 @@
  		return $result;
  	}
  	
+ 	/*
+ 	 * Determines if the datatype needs to be wrapped in single quotes when inserting / updating
+ 	 * 
+ 	 * @param $val	The value needing to be wrapped
+ 	 * @param $type	The datatype in the database
+ 	 * 
+ 	 * @return Returns the wrapped value if needed
+ 	*/
  	private function sqlWrap($val, $type) {
  		$wrappedTypes = array("CHAR", "VARCHAR", "TEXT", "TINYTEXT");
  		
@@ -122,6 +163,11 @@
  		return $val;
  	}
  	
+ 	/*
+ 	 * Saves the object to the database as a table
+ 	 * 
+ 	 * @return Returns true if database success else false
+ 	 */
  	public function persist() {
  		$create = true;
  		$sql = "";
