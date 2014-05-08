@@ -21,16 +21,20 @@ if($retVal)
 else
 	echo "Failure";
 
+//########################################################################
+
 echo "<h1>Object Saving</h1>";
 $user = new user($conn);
 $user->setUsername("MyUserName");
 $user->setSalt("MySalt");
 $user->setPassword("MyPassword");
-$retVal = $user->save();
+//$retVal = $user->save();
 if($retVal)
 	echo "Success!";
 else
 	echo "Failure";
+
+//########################################################################
 
 echo "<h1>Object Updating</h1>";
 $user = new user($conn);
@@ -44,7 +48,7 @@ if($retVal)
 else
 	echo "Failure";
 
-
+//########################################################################
 
 echo "<h1>Object Loading</h1>";
 $user = new user($conn);
@@ -60,6 +64,52 @@ echo "Id: " . $user->getId() . "<br />";
 echo "Name: " . $user->getUsername() . "<br />";
 echo "Salt: " . $user->getSalt() . "<br />";
 echo "Password: " . $user->getPassword() . "<br />";
+
+//########################################################################
+
+echo "<h1>Object Load First</h1>";
+$user = new user($conn);
+$retVal = $user->load('first');
+
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+echo "<br />";
+echo "Id: " . $user->getId() . "<br />";
+echo "Name: " . $user->getUsername() . "<br />";
+echo "Salt: " . $user->getSalt() . "<br />";
+echo "Password: " . $user->getPassword() . "<br />";
+
+//########################################################################
+
+echo "<h1>Object Load Last</h1>";
+$user = new user($conn);
+$retVal = $user->load('last');
+
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+echo "<br />";
+echo "Id: " . $user->getId() . "<br />";
+echo "Name: " . $user->getUsername() . "<br />";
+echo "Salt: " . $user->getSalt() . "<br />";
+echo "Password: " . $user->getPassword() . "<br />";
+
+//########################################################################
+
+echo "<h1>Object Deleting</h1>";
+$user = new user($conn);
+//$retVal = $user->load(5);
+//$retVal = $user->delete();
+
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
 
 
 ?>

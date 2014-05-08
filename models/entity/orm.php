@@ -22,7 +22,7 @@
  	 * @return Returns true on database search success, else false
  	 */
  	public function load($id) {
- 		$sql = "SELECT * FROM " . $this->table . " WHERE ";
+ 		$sql = "SELECT * FROM " . $this->table;
  		$primary = "";
  		
  		foreach(get_object_vars($this) as $var) {
@@ -33,9 +33,14 @@
  				}
  			}
  		}
+ 		if($id == "last") {
+ 			$sql .= " ORDER BY " . $primary . " DESC LIMIT 1";
+ 		} else if($id == "first") {
+ 			$sql .= " ORDER BY " . $primary . " ASC LIMIT 1";
+ 		} else {
+ 			$sql .= " WHERE " . $primary . "=" . $id;
+ 		}
  		
- 		$sql .= $primary . "=" . $id;
-
  		$result = $this->conn->query($sql) OR DIE ("Could not load");
  		
  		if ($result !== false && mysqli_num_rows($result) > 0 )
