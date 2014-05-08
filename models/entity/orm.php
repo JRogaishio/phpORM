@@ -54,6 +54,37 @@
  	}
  	
  	/*
+ 	 * Deletes the object from the database based on an id
+ 	*
+ 	* @param $id	The database ID to delete
+ 	*
+ 	* @return Returns true on database delete success, else false
+ 	*/
+ 	public function delete() {
+ 		$sql = "DELETE FROM " . $this->table . " WHERE ";
+ 		$primary = null;
+ 		$primaryIndex = null;
+ 		
+ 		foreach(get_object_vars($this) as $var) {
+ 			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
+ 				if(isset($var['primary']) && $var['primary'] == true && isset($var['value']) && $var['value'] != "") {
+ 					$primary = $var['field'];
+ 					$primaryIndex = $var['value'];
+ 					break;
+ 				}
+ 			}
+ 		}
+ 			
+ 		$sql .= $primary . "=" . $primaryIndex;
+		if($primary != null && $primaryIndex != null)
+ 			$result = $this->conn->query($sql) OR DIE ("Could not load");
+		else
+			$result = false;
+		
+		return $result;
+ 	}
+ 	
+ 	/*
  	 * Sets a ORM object value
  	 * 
  	 *  @param &$var	The object to set the value, passed by reference
