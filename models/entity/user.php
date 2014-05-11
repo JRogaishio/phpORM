@@ -12,13 +12,13 @@ class user extends orm {
 	public function setId($val) {$this->set($this->id, $val);}
 	public function setUsername($val) {$this->set($this->username, $val);}
 	public function setSalt($val) {$this->set($this->salt, $val);}
-	public function setPassword($val) {$this->set($this->password, $val);}
+	//public function setPassword($val) {$this->set($this->password, $val);}
 	
 	//Methods to retrieve ORM values
 	public function getId() {return $this->get($this->id);}
 	public function getUsername() {return $this->get($this->username);}
 	public function getSalt() {return $this->get($this->salt);}
-	public function getPassword() {return $this->get($this->password);}
+	//public function getPassword() {return $this->get($this->password);}
 	
 }
 

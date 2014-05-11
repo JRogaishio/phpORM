@@ -1,18 +1,48 @@
 <?php 
 
  class orm {
- 	protected $table = null;
- 	protected $conn = null;
+ 	private $table = null;
+ 	private $conn = null;
  	
  	/*
  	 * Saves the class name and the database connection object
- 	*
- 	* @param $conn	The database connection object
+ 	 * 
+ 	 * @param $conn	The database connection object
  	*/
  	public function __construct($conn) {
  		$this->table = get_class($this);
  		$this->conn = $conn;
  	}
+ 	
+ 	/*
+ 	 * Used as a getter / setter incase not already defined
+ 	 */
+ 	public function __call($name, $arguments)
+ 	{
+ 		$code = substr($name, 0, 3);
+ 	
+ 		if($code == "get") {
+ 			$var = substr($name, 3);
+ 			$var = lcfirst($var); //Set the first letter to lowercase for convention
+ 			
+ 			if(isset($this->$var)) {
+ 				return $this->get($this->$var);
+ 			} else {
+ 				return false;
+ 			}
+ 		} else if($code == "set") {
+ 			$var = substr($name, 3);
+ 			$var = lcfirst($var); //Set the first letter to lowercase for convention
+ 					
+ 			if(isset($this->$var) && isset($arguments[0])) {
+ 				$this->set($this->$var, $arguments[0]);
+ 				return true;
+ 			} else {
+ 				return false;
+ 			}
+ 		}
+ 	}
+ 	
  	
  	/*
  	 * Loads the object from the database based on an id
