@@ -16,6 +16,11 @@
  	
  	/*
  	 * Used as a getter / setter incase not already defined
+ 	 * 
+ 	 * @param $name			The name of the function called that doesn't exist
+ 	 * @param $arguments	Arguments sent to the function
+ 	 * 
+ 	 * @return Retuns true if the function was successful
  	 */
  	public function __call($name, $arguments)
  	{
