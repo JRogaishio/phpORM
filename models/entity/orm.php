@@ -225,7 +225,7 @@
  	 * @return Returns the wrapped value if needed
  	*/
  	private function sqlWrap($val, $type) {
- 		$wrappedTypes = array("CHAR", "VARCHAR", "TEXT", "TINYTEXT");
+ 		$wrappedTypes = array("CHAR", "VARCHAR", "TEXT", "TINYTEXT", "DATETIME");
  		
  		if(in_array(strtoupper($type), $wrappedTypes) == true) {
  			$val = "'" . $val . "'";
