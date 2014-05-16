@@ -98,20 +98,22 @@
  		return $result;
  	}
  	
- 	/*
- 	 * Loads the object from the database based on an id
- 	*
- 	* @param $id	The database ID to load
- 	*
- 	* @return Returns true on database search success, else false
+ 	/**
+ 	 * Loads an array of objects from the database based on an id
+ 	 *
+ 	 * @param $id				The database foreign key ID to load
+ 	 * @param $relatedField		The related field in the object
+ 	 * @param $relatedObject	A blank copy of the related object to clone
+ 	 *
+ 	 * @return Returns true on database search success, else false
  	*/
- 	public function loadList($id, $relatedObject, $relatedField) {
+ 	public function loadList($id, $relatedField, $relatedObject) {
  		$sql = "SELECT * FROM " . $relatedObject->table . " WHERE " . $relatedField . "=" . $id;
  		
  		$relPrimary = null;
  		
  		//Find the related objects primary key field name
- 		foreach(get_object_vars($relObj) as $var) {
+ 		foreach(get_object_vars($relatedObject) as $var) {
  			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
  				if(isset($var['primary']) && $var['primary'] == true) {
  					$relPrimary = $var['field'];
@@ -124,11 +126,11 @@
  		$retArr = array();
  		
  		if ($result !== false && mysqli_num_rows($result) > 0 ) {
- 			while($row = mysqli_fetch_assoc($postResult) ) {
+ 			while($row = mysqli_fetch_assoc($result) ) {
  				
  				$obj = clone $relatedObject;
  				$obj->load($row[$relPrimary]);
- 				$retArr = array_push($retArr, $obj);
+ 				array_push($retArr, $obj);
  			}
  		} 			
  		
