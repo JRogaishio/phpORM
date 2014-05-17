@@ -114,9 +114,7 @@
  		foreach($filters as $filter) {
  			$filterString .= " AND " . $filter;
  		}
- 		
- 		
- 		
+ 		 		
  		if(strpos($sort, ":") !== false) {
  			$sortOrder = explode(":", $sort);
  			$sField = $sortOrder[0];
@@ -125,8 +123,6 @@
  		}
  		
  		$sql = "SELECT * FROM " . $relatedObject->table . " WHERE " . $relatedField . "=" . $id . $filterString . $sortString;
- 		
- 		
  		
  		$relPrimary = null;
  		
