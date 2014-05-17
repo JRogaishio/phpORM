@@ -4,7 +4,7 @@
  	protected $table = null;
  	protected $conn = null;
  	
- 	/*
+ 	/**
  	 * Saves the class name and the database connection object
  	 * 
  	 * @param $conn	The database connection object
@@ -14,7 +14,7 @@
  		$this->conn = $conn;
  	}
  	
- 	/*
+ 	/**
  	 * Used as a getter / setter incase not already defined
  	 * 
  	 * @param $name			The name of the function called that doesn't exist
@@ -49,7 +49,7 @@
  	}
  	
  	
- 	/*
+ 	/**
  	 * Loads the object from the database based on an id
  	 * 
  	 * @param $id	The database ID to load
@@ -107,8 +107,26 @@
  	 *
  	 * @return Returns true on database search success, else false
  	*/
- 	public function loadList($id, $relatedField, $relatedObject) {
- 		$sql = "SELECT * FROM " . $relatedObject->table . " WHERE " . $relatedField . "=" . $id;
+ 	public function loadList($id, $relatedField, $relatedObject, $sort = null, $filters=array()) {
+ 		$sortString = "";
+ 		$filterString = "";
+ 		
+ 		foreach($filters as $filter) {
+ 			$filterString .= " AND " . $filter;
+ 		}
+ 		
+ 		
+ 		
+ 		if(strpos($sort, ":") !== false) {
+ 			$sortOrder = explode(":", $sort);
+ 			$sField = $sortOrder[0];
+ 			$sType = $sortOrder[1];
+ 			$sortString = " ORDER BY " . $sField . " " . $sType;
+ 		}
+ 		
+ 		$sql = "SELECT * FROM " . $relatedObject->table . " WHERE " . $relatedField . "=" . $id . $filterString . $sortString;
+ 		
+ 		
  		
  		$relPrimary = null;
  		
@@ -132,17 +150,17 @@
  				$obj->load($row[$relPrimary]);
  				array_push($retArr, $obj);
  			}
- 		} 			
+ 		}
  		
  		return $retArr;
  	} 	
  	
- 	/*
+ 	/**
  	 * Deletes the object from the database based on an id
- 	*
- 	* @param $id	The database ID to delete
- 	*
- 	* @return Returns true on database delete success, else false
+ 	 *
+ 	 * @param $id	The database ID to delete
+ 	 *
+ 	 * @return Returns true on database delete success, else false
  	*/
  	public function delete() {
  		$sql = "DELETE FROM " . $this->table . " WHERE ";
@@ -168,7 +186,7 @@
 		return $result;
  	}
  	
- 	/*
+ 	/**
  	 * Sets a ORM object value
  	 * 
  	 *  @param &$var	The object to set the value, passed by reference
@@ -179,7 +197,7 @@
 		$var['value'] = $value;
  	}
  	
- 	/*
+ 	/**
  	 * Gets a ORM object value
  	 * 
  	 * @param $var	The object to get a value from
@@ -193,7 +211,7 @@
  			return null;
  	}
  	
- 	/*
+ 	/**
  	 * Saves the object to the database.
  	 * 
  	 * This will insert the object if no primary key is defined or update the database records if a key exists
@@ -260,7 +278,7 @@
  		return $result;
  	}
  	
- 	/*
+ 	/**
  	 * Determines if the datatype needs to be wrapped in single quotes when inserting / updating
  	 * 
  	 * @param $val	The value needing to be wrapped
@@ -278,7 +296,7 @@
  		return $val;
  	}
  	
- 	/*
+ 	/**
  	 * Determines if the datatype needs to be converted to a php number
  	 * 
  	 * @param $val	The value needing to be converted
@@ -301,7 +319,7 @@
  		return $ret;
  	}
  	
- 	/*
+ 	/**
  	 * Saves the object to the database as a table
  	 * 
  	 * @return Returns true if database success else false
@@ -347,5 +365,5 @@
  	}
  	
  }
-
+ 
 ?>

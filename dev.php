@@ -33,7 +33,7 @@ if($retVal) echo "Success!"; else echo "Failure";
 
 echo "<h1>Object List Loading</h1>";
 $user = new user($conn);
-$pageList = $user->loadList(1, "authorId", new page($conn));
+$pageList = $user->loadList(1, "authorId", new page($conn), "id:ASC", array("id=1"));
 
 foreach($pageList as $obj) {
 	echo "<h2>" . $obj->getTitle() . "</h2>" . $obj->getCreated() . "<hr />";
