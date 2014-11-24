@@ -3,7 +3,8 @@ include_once("config.php");
 include_once("models/entity/orm.php");
 include_once("models/entity/user.php");
 
-$conn = new mysqli(DB_HOST,DB_USERNAME,DB_PASSWORD) or die("Could not connect. " . mysqli_error());
+$conn = new PDO("mysql:host=" . DB_HOST, DB_USERNAME, DB_PASSWORD);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //Create the database if it doesn't exist
 $dbCreate = "CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "`;";
