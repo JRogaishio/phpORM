@@ -115,11 +115,11 @@
  	 *
  	 * @param $relatedObject	A blank copy of the related object to clone
  	 * @param $sort				The sort order passed as field:type
- 	 * @param $filters			Any filters sent as an array. Each index should be field=value
+ 	 * @param $filters			Any filters sent as an array. Each filter should be field = value. You MUST have spaces between the comparison
  	 *
  	 * @return Returns true on database search success, else false
  	*/
- 	public function loadList($relatedObject, $sort = null, $filters=array()) {
+ 	public function loadArr($relatedObject, $sort = null, $filters=array()) {
  		$sortString = "";
  		$filterString = "";
  		
@@ -129,9 +129,12 @@
  			else
  				$filterString .=  " AND ";
  			
- 			$filterString .= $filter;
+ 			$params = explode(' ', $filter);
+ 				 			
+ 			//Build the filter field compare :field
+ 			$filterString .= $params[0] . $params[1] . ' :' . $params[0];
  		}
- 		 		
+
  		if(strpos($sort, ":") !== false) {
  			$sortOrder = explode(":", $sort);
  			$sField = $sortOrder[0];
@@ -152,15 +155,32 @@
  				}
  			}
  		}
- 		
- 		$result = $this->conn->query($sql) OR DIE ("Could not load list");
+
+ 		$stmt = $this->conn->prepare($sql);
+ 		foreach($filters as $filter) {
+			$params = explode(' ', $filter);
+			//Get the PHP Array field
+ 			$field = $this->$params[0];
+ 			//Get the SQL field we want to access
+ 			$sqlField = $params[0];
+ 			//Get the condition value
+ 			$val = $params[2];
+ 			$type = $this->getDataType($field['datatype']);
+			if($type=='str')
+				$stmt->bindValue(':' . $sqlField, $val, PDO::PARAM_STR);
+			else if($type=='int')
+				$stmt->bindValue(':' . $sqlField, $val, PDO::PARAM_INT);
+
+ 			
+ 		}
+
+ 		$stmt->execute();
  		$retArr = array();
  		
- 		$rows = $result->fetchAll(PDO::FETCH_ASSOC);
- 		
+ 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
  		if(is_array($rows)) {
  			foreach($rows as $row) {
- 				
  				$obj = clone $relatedObject;
  				$obj->load($row[$relPrimary]);
  				array_push($retArr, $obj);
@@ -309,6 +329,24 @@
  		}
  		
  		return $val;
+ 	}
+ 	
+ 	/**
+ 	 * Determines if the SQL field is an int or string
+ 	 * 
+ 	 * @param $type	The datatype in the database
+ 	 */
+ 	private function getDataType($type) {
+ 		$ret = null;
+ 		$strTypes = array("CHAR", "VARCHAR", "TEXT", "TINYTEXT", "DATETIME");
+ 		$intTypes = array("BIGINT", "DECIMAL", "INT", "MEDIUMINT", "SMALLINT", "TINYINT");
+ 		
+ 		if(in_array(strtoupper($type), $intTypes) == true) {
+ 			$ret = 'int';
+ 		} else if(in_array(strtoupper($type), $strTypes) == true) {
+ 			$ret = 'str';
+ 		}
+ 		return $ret;
  	}
  	
  	/**

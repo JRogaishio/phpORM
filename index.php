@@ -67,6 +67,22 @@ echo "Password: " . $user->getPassword() . "<br />";
 
 //########################################################################
 
+echo "<h1>Object List Loading</h1>";
+$user = new user($conn);
+$retVal = $user->loadArr($user, null, array('id >= 2'));
+
+if($retVal)
+	echo "Success!";
+else
+	echo "Failure";
+
+echo "<br />";
+foreach($retVal as $obj) {
+	echo "Id: " . $obj->getId() . "<br />";
+	echo "Name: " . $obj->getUsername() . "<br />";
+}
+//########################################################################
+
 echo "<h1>Object Load First</h1>";
 $user = new user($conn);
 $retVal = $user->load('first');
