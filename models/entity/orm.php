@@ -67,7 +67,7 @@
  	public function load($id) {
  		$sql = "SELECT * FROM " . $this->table;
  		$primary = "";
- 		
+ 		$params = array();
  		foreach(get_object_vars($this) as $var) {
  			if(is_array($var) && isset($var['orm']) && $var['orm'] == true) {
  				if(isset($var['primary']) && $var['primary'] == true) {
@@ -81,12 +81,17 @@
  		} else if($id == "first") {
  			$sql .= " ORDER BY " . $primary . " ASC LIMIT 1";
  		} else {
- 			$sql .= " WHERE " . $primary . "=" . $id;
+ 			$sql .= " WHERE " . $primary . "=:id";
+ 			$params['id'] = true;
  		}
+
+ 		$stmt = $this->conn->prepare($sql);
+ 		if(isset($params['id']))
+ 			$stmt->bindValue(':id', $id, PDO::PARAM_INT);
  		
- 		$result = $this->conn->query($sql) OR DIE ("Could not load");
- 		
- 		$row = $result->fetch(PDO::FETCH_ASSOC);
+ 		$stmt->execute();
+
+ 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
  		
  		//Set the loaded SQL data to the object ORM variables
  		if(is_array($row)) {
@@ -102,7 +107,7 @@
  			}
  			
  		}
- 		return $result;
+ 		return $stmt;
  	}
  	
  	/**

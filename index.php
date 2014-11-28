@@ -11,8 +11,7 @@ $dbCreate = "CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "`;";
 $conn->query($dbCreate) OR DIE ("Could not build database!");
 
 //Connect to our shiney new database
-$conn->select_db(DB_NAME) or die("Could not select database. " . mysqli_error());
-
+$conn->query("USE " . DB_NAME . ";") or die("Could not select database.");
 
 echo "<h1>Object Table Creating</h1>";
 $user = new user($conn);
