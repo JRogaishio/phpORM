@@ -170,8 +170,6 @@
 				$stmt->bindValue(':' . $sqlField, $val, PDO::PARAM_STR);
 			else if($type=='int')
 				$stmt->bindValue(':' . $sqlField, $val, PDO::PARAM_INT);
-
- 			
  		}
 
  		$stmt->execute();
@@ -335,6 +333,8 @@
  	 * Determines if the SQL field is an int or string
  	 * 
  	 * @param $type	The datatype in the database
+ 	 * 
+ 	 * @return datatype of int or str
  	 */
  	private function getDataType($type) {
  		$ret = null;
