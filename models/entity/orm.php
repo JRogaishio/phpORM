@@ -89,7 +89,7 @@
  		if(isset($params['id']))
  			$stmt->bindValue(':id', $id, PDO::PARAM_INT);
  		
- 		$stmt->execute();
+ 		$result = $stmt->execute();
 
  		$row = $stmt->fetch(PDO::FETCH_ASSOC);
  		
@@ -107,7 +107,7 @@
  			}
  			
  		}
- 		return $stmt;
+ 		return $result;
  	}
  	
  	/**
